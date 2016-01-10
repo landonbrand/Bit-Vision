@@ -1,0 +1,100 @@
+@font-face {
+  font-family: 'Ahamono';
+  src: url('fonts/ahamono-monospaced-webfont.eot'); /* IE9 Compat Modes */
+  src: url('fonts/ahamono-monospaced-webfont.woff2') format('woff2'), /* Super Modern Browsers */
+       url('fonts/ahamono-monospaced-webfont.woff') format('woff'), /* Pretty Modern Browsers */
+       url('fonts/ahamono-monospaced-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('fonts/ahamono-monospaced-webfont.svg') format('svg'); /* Legacy iOS */
+}
+
+body{
+  font-family: "Ahamono", "typewriter", monospace;
+  font-size: 14px;
+  padding:30px;
+  background: #F0F0F0;
+}
+
+h1 {
+  font-size: 3.5em;
+  margin:0;
+  margin-bottom:0;
+}
+
+h1 a{
+  text-align: center;
+  letter-spacing: 4px;
+  text-decoration: none;
+  color: #000;
+}
+
+h2{
+  margin-bottom: 1em;
+}
+
+a {
+  display: inline-block;
+}
+
+img {
+  padding-bottom: 3em;
+}
+
+#container{
+  display: inline-block;
+  text-align: center;
+  margin:auto;
+  width:80%;
+  vertical-align:top;
+}
+
+#sidebar{
+  display: inline-block;
+  width: 15%;
+  vertical-align:top;
+  margin-right: 15px;
+}
+
+div .sliderLine{
+  display: inline-block;
+  text-align: left;
+  width: 100%;
+}
+
+.sliderLine input{
+  float: left;
+  margin: 0;
+  width: 100%;
+}
+
+.sliderLine p{
+  margin-bottom: 5px;
+}
+
+.button{
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  width: 46%;
+  padding: 6px 0px;
+  font-size: 1em;
+  background-color: #909090;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 0 4px #909090, 0 0 1px rgba(0, 0, 0, 0);
+
+  /*border: 3px solid #505050;*/
+  font-family: "Ahamono", "typewriter", monospace;
+}
+
+.button:hover{
+  background: none;
+  color: #000;
+}
+
+.footer{
+  margin-top:1em;
+  display: inline-block;
+  font-size:1.5em;
+  width:110%;
+  margin-left:-6%;
+}
+

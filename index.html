@@ -1,0 +1,74 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<title>Landon Brand's Portfolio</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="script.js"></script>
+		<!-- script src="processing.js"></script --> 
+	</head>
+	<body>
+		<div id="sidebar">
+			<h1><a href="index.html">Bit Vision</a></h1>
+			
+			<br>
+			<div class ="sliderLine">
+				<p>Threshold: 
+				<span id="thresholdReadout"></span></p>
+				<input id="thresholdSlider" type="range" min="0" max="500" step="1" value="0" onChange="updateThreshold()"/>
+			</div>
+			<div class ="sliderLine">
+				<p>Magnitude:
+				<span id="magnitudeReadout"></span></p> 
+				<input id="magnitudeSlider" type="range" min="0" max="1" step="0.01" onChange="updateMagnitude()"/>
+			</div>
+			<div class ="sliderLine">
+				<p>Horizontal Increment: 
+				<span id="horizontalReadout"></span></p>
+				<input id="horizontalSlider" type="range" min="-3" max="3" step="1" value="0" onChange="updateHorizontalIncrement()"/>
+			</div>
+			<div class ="sliderLine">
+				<p>Vertical Increment:
+				<span id="verticalReadout"></span></p>
+				<input id="verticalSlider" type="range" min="-3" max="3" step="1" onChange="updateVerticalIncrement()"/>
+			</div>
+
+			<br>
+			<br>
+			<span>Algorithm: </span> 
+			<br>
+			<input type="radio" name="algorithm" onChange="updateAlgorithm(0)" checked>
+			<span>alpha blended &nbsp;</span> 
+			<br>
+			<input type="radio" name="algorithm" onChange="updateAlgorithm(1)"> 
+			<span>hard sort &nbsp;</span>
+
+			<br>
+			<br>
+			<span>Comparator: </span> <br>
+			<input type="radio" name="comparator" onChange="updateComparator(0)" checked>
+			<span>brightness &nbsp;</span>
+			<br>
+			<input type="radio" name="comparator" onChange="updateComparator(1)"> 
+			<span>hue &nbsp;</span>
+			<br>
+			<input type="radio" name="comparator" onChange="updateComparator(2)"> 
+			<span>saturation &nbsp;</span>
+
+			<br>
+			<br>
+			<a href="#" class="button" onClick="reload()">[R]eload</a>
+			<a href="#" class="button" onClick="save()">[S]ave</a>
+
+		</div>
+
+		<div id="container">
+			<canvas id="pixelSort"></canvas>
+			<div id="footer">
+				<p>Contact: mail@landonbrand.com</p>
+				<a href="https://github.com/landonbrand/Bit-Vision">Github</a>
+			</div>
+		</div>
+
+	</body>
+
+</html>
