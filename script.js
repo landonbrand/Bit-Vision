@@ -15,12 +15,20 @@ var orientation = ORIENTATION_VERTICAL;
 
 var verticalIncrement = -1;
 var horizontalIncrement = 0;
+var redMagnitude = 0.5;
+var greenMagnitude = 0.5;
+var blueMagnitude = 0.5;
 
 var ALG_ALPHABLENDED = 0;
 var ALG_HARDSORT = 1;
+var ALG_RGBBLENDED = 2;
+var ALG_REDSWAP = 3;
+var ALG_GREENSWAP = 4;
+var ALG_BLUESWAP = 5;
 var COMP_BRIGHTNESS = 0;
 var COMP_HUE = 1;
 var COMP_SATURATION = 2;
+var COMP_COLOR = 3;
 
 var threshold = 50;
 var magnitude = 0.5;
@@ -46,6 +54,8 @@ function init(){
 	updateMagnitude();
 	updateHorizontalIncrement();
 	updateVerticalIncrement();
+	updateRGB();
+	updateAlgorithm(ALG_ALPHABLENDED);
 	initFileDrop($('html'));
 }
 
@@ -113,11 +123,83 @@ function updateVerticalIncrement(){
 	document.getElementById("verticalReadout").innerHTML = verticalIncrement;
 }
 
+function updateRGB(){
+	redMagnitude = parseFloat(document.getElementById("redSlider").value);
+	document.getElementById("redReadout").innerHTML = redMagnitude;
+
+	greenMagnitude = parseFloat(document.getElementById("greenSlider").value);
+	document.getElementById("greenReadout").innerHTML = greenMagnitude;
+
+	blueMagnitude = parseFloat(document.getElementById("blueSlider").value);
+	document.getElementById("blueReadout").innerHTML = blueMagnitude;
+}
+
 function updateAlgorithm(v){
 	//algorithm = document.querySelector('input[name="comparator"]:checked').value;
 	//algorithm = parseInt(algorithm);
 	algorithm = v;
+
+	switch(algorithm){
+		case ALG_ALPHABLENDED:
+			showElement("threshold");
+			showElement("magnitude");
+			showElement("verticalIncrement");
+			showElement("horizontalIncrement");
+			hideElement("redMagnitude");
+			hideElement("blueMagnitude");
+			hideElement("greenMagnitude");
+			break;
+		case ALG_HARDSORT:
+		case ALG_REDSWAP:
+		case ALG_GREENSWAP:
+		case ALG_BLUESWAP:
+			showElement("threshold");
+			hideElement("magnitude");
+			showElement("verticalIncrement");
+			showElement("horizontalIncrement");
+			hideElement("redMagnitude");
+			hideElement("blueMagnitude");
+			hideElement("greenMagnitude");
+			break;
+		case ALG_RGBBLENDED:
+			showElement("threshold");
+			hideElement("magnitude");
+			showElement("verticalIncrement");
+			showElement("horizontalIncrement");
+			showElement("redMagnitude");
+			showElement("blueMagnitude");
+			showElement("greenMagnitude");
+			break;
+		case ALG_RGBBLENDED:
+			showElement("threshold");
+			hideElement("magnitude");
+			showElement("verticalIncrement");
+			showElement("horizontalIncrement");
+			showElement("redMagnitude");
+			showElement("blueMagnitude");
+			showElement("greenMagnitude");
+			break;
+
+
+		default:
+			break;
+
+	}
 	//alert(algorithm);
+}
+
+function showElement(element){
+	var el = document.getElementById(element);
+	el.style.display = "inline-block";
+	setTimeout(function() {el.style.maxHeight = 50;}, 10);
+	setTimeout(function() {el.style.opacity = 1}, 500);
+}
+
+function hideElement(element){
+	var el = document.getElementById(element);
+	el.style.opacity = 0;
+	el.style.maxHeight = 0;
+	setTimeout(function() {el.style.display = "none"}, 1000);
 }
 
 function updateComparator(v){
@@ -152,6 +234,18 @@ function iterate(){
 		case ALG_HARDSORT:
 			iterateHardSort();
 			break;
+		case ALG_RGBBLENDED:
+			iterateRGBBlended();
+			break;
+		case ALG_REDSWAP:
+			iterateRedChannelSort();
+			break;
+		case ALG_GREENSWAP:
+			iterateGreenChannelSort();
+			break;
+		case ALG_BLUESWAP:
+			iterateBlueChannelSort();
+			break;
 		default:
 			console.log("Error: no algorithm selected");
 	}
@@ -169,6 +263,24 @@ function iterateAlphaBlended(){
 			if(compare(curPix) > compare(nexPix) + threshold){
 				//blend pixels and set
 				var blendedValue = blend(curPix, nexPix, magnitude);
+				setPixel(x + horizontalIncrement, y + verticalIncrement, blendedValue);
+				setPixel(x, y, blendedValue);
+			}
+		}
+	}
+}
+
+function iterateRGBBlended(){
+	var curPix;
+	var nexPix;
+	for(var x = 0; x < width; x++){
+		for(var y = 0; y < height; y++){
+			curPix = getPixel(x, y);
+			nexPix = getPixel(x + horizontalIncrement, y + verticalIncrement);
+			//compare using compare() function
+			if(compare(curPix) > compare(nexPix) + threshold){
+				//blend pixels and set
+				var blendedValue = blendRGB(curPix, nexPix, redMagnitude, greenMagnitude, blueMagnitude);
 				setPixel(x + horizontalIncrement, y + verticalIncrement, blendedValue);
 				setPixel(x, y, blendedValue);
 			}
@@ -213,6 +325,117 @@ function iterateHardSort(){
 
 }
 
+function iterateRedChannelSort(){
+	var curPix;
+	var nexPix;
+	var startY = 0;
+	var  startX = 0;
+	var endY = height - verticalIncrement;
+	var endX = width - horizontalIncrement;
+
+	if(verticalIncrement < 0){
+		startY = Math.abs(verticalIncrement);
+	}
+
+	if(horizontalIncrement < 0){
+		startX = Math.abs(horizontalIncrement);
+	}
+
+	for(var y = 0; y < endY; y++){
+		for(var x = 0; x < endX; x++){
+
+			curPix = getPixel(x, y);
+			nexPix = getPixel(x + horizontalIncrement, y + verticalIncrement);
+
+			if(!nexPix){
+				break;
+			}
+
+			if(compare(curPix) > compare(nexPix) + threshold){
+				setRed(x + horizontalIncrement, y + verticalIncrement, curPix, getRed(nexPix));
+				setRed(x, y, nexPix, getRed(curPix));
+			}
+
+		}
+		
+	}
+
+}
+
+function iterateGreenChannelSort(){
+	var curPix;
+	var nexPix;
+	var startY = 0;
+	var  startX = 0;
+	var endY = height - verticalIncrement;
+	var endX = width - horizontalIncrement;
+
+	if(verticalIncrement < 0){
+		startY = Math.abs(verticalIncrement);
+	}
+
+	if(horizontalIncrement < 0){
+		startX = Math.abs(horizontalIncrement);
+	}
+
+	for(var y = 0; y < endY; y++){
+		for(var x = 0; x < endX; x++){
+
+			curPix = getPixel(x, y);
+			nexPix = getPixel(x + horizontalIncrement, y + verticalIncrement);
+
+			if(!nexPix){
+				break;
+			}
+
+			if(compare(curPix) > compare(nexPix) + threshold){
+				setGreen(x + horizontalIncrement, y + verticalIncrement, curPix, getGreen(nexPix));
+				setGreen(x, y, nexPix, getGreen(curPix));
+			}
+
+		}
+		
+	}
+
+}
+
+function iterateBlueChannelSort(){
+	var curPix;
+	var nexPix;
+	var startY = 0;
+	var  startX = 0;
+	var endY = height - verticalIncrement;
+	var endX = width - horizontalIncrement;
+
+	if(verticalIncrement < 0){
+		startY = Math.abs(verticalIncrement);
+	}
+
+	if(horizontalIncrement < 0){
+		startX = Math.abs(horizontalIncrement);
+	}
+
+	for(var y = 0; y < endY; y++){
+		for(var x = 0; x < endX; x++){
+
+			curPix = getPixel(x, y);
+			nexPix = getPixel(x + horizontalIncrement, y + verticalIncrement);
+
+			if(!nexPix){
+				break;
+			}
+
+			if(compare(curPix) > compare(nexPix) + threshold){
+				setBlue(x + horizontalIncrement, y + verticalIncrement, curPix, getBlue(nexPix));
+				setBlue(x, y, nexPix, getBlue(curPix));
+			}
+
+		}
+		
+	}
+
+}
+
 function blend(v1, v2, weight){
 	var output = [0,0,0,255];
 	var rgba1 = convert32to8(v1);
@@ -220,6 +443,16 @@ function blend(v1, v2, weight){
 	for(var i = 0; i < 3; i++){
 		output[i] = rgba1[i] * weight + rgba2[i] * (1 - weight);
 	}
+	return convert8to32(output);
+}
+
+function blendRGB(v1, v2, rWeight, gWeight, bWeight){
+	var output = [0,0,0,255];
+	var rgba1 = convert32to8(v1);
+	var rgba2 = convert32to8(v2);
+	output[0] = rgba1[0] * rWeight + rgba2[0] * (1 - rWeight);
+	output[1] = rgba1[1] * gWeight + rgba2[1] * (1 - gWeight);
+	output[2] = rgba1[2] * bWeight + rgba2[2] * (1 - bWeight);
 	return convert8to32(output);
 }
 
@@ -254,6 +487,42 @@ function brightness(rgba){
 	var green = rgba >>> 8	& 0xFF;
 	var blue = 	rgba 	 	& 0xFF;
 	return (red + green + blue);
+}
+
+function getRed(rgba){
+	var red = rgba >>> 0 & 0xFF;
+	return red;
+}
+
+function getGreen(rgba){
+	var green = rgba >>> 8 & 0xFF;
+	return green;
+}
+
+function getBlue(rgba){
+	var blue = rgba >>> 16 & 0xFF;
+	return blue;
+}
+
+function setRed(x, y, rgba, red){
+	rgba = convert32to8(rgba);
+	rgba[0] = red;
+	rgba = convert8to32(rgba);
+	data[y * width + x] = rgba;
+}
+
+function setGreen(x, y, rgba, green){
+	rgba = convert32to8(rgba);
+	rgba[1] = green;
+	rgba = convert8to32(rgba);
+	data[y * width + x] = rgba;
+}
+
+function setBlue(x, y, rgba, blue){
+	rgba = convert32to8(rgba);
+	rgba[2] = blue;
+	rgba = convert8to32(rgba);
+	data[y * width + x] = rgba;
 }
 
 function hue(rgba){
@@ -296,6 +565,35 @@ function saturation(rgba){
 	return saturation*750;
 }
 
+function color(rgba){
+	var red = 	rgba >>> 16	& 0xFF;
+	var green = rgba >>> 8	& 0xFF;
+	var blue = 	rgba 	 	& 0xFF;
+
+	var max = Math.max(red, green, blue);
+	var min = Math.min(red, green, blue);
+
+	var saturation = 0;
+
+	if((min + max) / 2 < 0.5){
+		saturation = (max - min) / (max + min);
+	} else{
+		saturation = (max - min) / (2.0 - max - min);
+	}
+
+	var hue = 0;
+
+	if(max == red){
+		hue = (green - blue) / (max - min);
+	} else if (max == green){
+		hue = 2.0 + (blue - red) / (max - min);
+	} else{
+		hue = 4.0 + (red - green) / (max - min);
+	}
+
+	return hue*saturation*750;
+}
+
 function compare(rgba){
 
 	switch(comparator){
@@ -307,6 +605,9 @@ function compare(rgba){
 			break;
 		case COMP_SATURATION:
 			return saturation(rgba);
+			break;
+		case COMP_COLOR:
+			return color(rgba);
 			break;
 		default:
 			//alert("Error: no comparator selected");

@@ -19,25 +19,43 @@
 			<h1><a href="index.html">Bit Vision</a></h1>
 			
 			<br>
-			<div class ="sliderLine">
+			<div class ="sliderLine" id="horizontalIncrement">
+				<p>Horizontal Increment: 
+				<span id="horizontalReadout"></span></p>
+				<input id="horizontalSlider" type="range" min="-3" max="3" step="1" value="1" onChange="updateHorizontalIncrement()"/>
+			</div>
+			<div class ="sliderLine" id="verticalIncrement">
+				<p>Vertical Increment:
+				<span id="verticalReadout"></span></p>
+				<input id="verticalSlider" type="range" min="-3" max="3" step="1" onChange="updateVerticalIncrement()"/>
+			</div>
+
+			<div class ="sliderLine" id="threshold">
 				<p>Threshold: 
 				<span id="thresholdReadout"></span></p>
 				<input id="thresholdSlider" type="range" min="0" max="500" step="1" value="0" onChange="updateThreshold()"/>
 			</div>
-			<div class ="sliderLine">
+			<div class ="sliderLine" id="magnitude">
 				<p>Magnitude:
 				<span id="magnitudeReadout"></span></p> 
 				<input id="magnitudeSlider" type="range" min="0" max="1" step="0.01" onChange="updateMagnitude()"/>
 			</div>
-			<div class ="sliderLine">
-				<p>Horizontal Increment: 
-				<span id="horizontalReadout"></span></p>
-				<input id="horizontalSlider" type="range" min="-3" max="3" step="1" value="0" onChange="updateHorizontalIncrement()"/>
+			
+
+			<div class ="sliderLine" id="redMagnitude">
+				<p>Red Magnitude:
+				<span id="redReadout"></span></p>
+				<input id="redSlider" type="range" min="-1" max="1" step="0.1" value="0.5" onChange="updateRGB()"/>
 			</div>
-			<div class ="sliderLine">
-				<p>Vertical Increment:
-				<span id="verticalReadout"></span></p>
-				<input id="verticalSlider" type="range" min="-3" max="3" step="1" onChange="updateVerticalIncrement()"/>
+			<div class ="sliderLine" id="greenMagnitude">
+				<p>Green Magnitude:
+				<span id="greenReadout"></span></p>
+				<input id="greenSlider" type="range" min="-1" max="1" step="0.1" value="0.5" onChange="updateRGB()"/>
+			</div>
+			<div class ="sliderLine" id="blueMagnitude">
+				<p>Blue Magnitude:
+				<span id="blueReadout"></span></p>
+				<input id="blueSlider" type="range" min="-1" max="1" step="0.1" value="0.5" onChange="updateRGB()"/>
 			</div>
 
 			<br>
@@ -49,6 +67,19 @@
 			<br>
 			<input type="radio" name="algorithm" onChange="updateAlgorithm(1)"> 
 			<span>hard sort &nbsp;</span>
+			<br>
+			<input type="radio" name="algorithm" onChange="updateAlgorithm(2)"> 
+			<span>rgb alpha blended &nbsp;</span>
+			<br>
+			<input type="radio" name="algorithm" onChange="updateAlgorithm(3)"> 
+			<span>red swap &nbsp;</span>
+			<br>
+			<input type="radio" name="algorithm" onChange="updateAlgorithm(4)"> 
+			<span>green swap &nbsp;</span>
+			<br>
+			<input type="radio" name="algorithm" onChange="updateAlgorithm(5)"> 
+			<span>blue swap &nbsp;</span>
+			<br>
 
 			<br>
 			<br>
@@ -61,6 +92,9 @@
 			<br>
 			<input type="radio" name="comparator" onChange="updateComparator(2)"> 
 			<span>saturation &nbsp;</span>
+			<br>
+			<input type="radio" name="comparator" onChange="updateComparator(3)"> 
+			<span>color &nbsp;</span>
 
 			<br>
 			<br>
